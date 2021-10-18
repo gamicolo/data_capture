@@ -88,6 +88,10 @@ class TestStats(unittest.TestCase):
 
         self.assertEqual(self.stats.greater(4),2)
 
+    def test_greater_not_int(self):
+
+        self.assertEqual(self.stats.greater('h'),0)
+
 if __name__ == "__main__":
 
     unittest.main()
