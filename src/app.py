@@ -18,6 +18,10 @@ class DataCapture():
         if type(num) == int:
             self.numbers.append(num)
 
+    def get_collection(self):
+
+        return self.numbers
+
     def build_stats(self):
 
         '''Build two dicts with the less and greater values found between the min and max item of the collection '''
@@ -25,17 +29,15 @@ class DataCapture():
         self.numbers.sort()
         total_list_size = len(self.numbers)
         for i in range(self._get_max_item_value(self.numbers)+1):
-            next_greater, next_less = self._get_next_values(i)
-            logger.debug('next_greater <%s> of iterator <%s>' % (str(next_greater),str(i)))
-            logger.debug('next_less <%s> of iterator <%s>' % (str(next_less),str(i)))
+            next_less_equal, next_less_strict = self._get_next_less_values(i)
 
-            if i not in self.less_values and next_less:
-                self.less_values[i] = len(self.numbers[0:self._get_max_item_index(next_less)])
+            if i not in self.less_values and next_less_strict:
+                self.less_values[i] = len(self.numbers[0:self._get_max_item_index(next_less_strict)])
             elif i not in self.less_values:
                 self.less_values[i] = 0
 
-            if i not in self.greater_values and next_greater:
-                self.greater_values[i] = total_list_size - len(self.numbers[0:self._get_max_item_index(next_greater)])
+            if i not in self.greater_values and next_less_equal:
+                self.greater_values[i] = total_list_size - len(self.numbers[0:self._get_max_item_index(next_less_equal)])
             elif i not in self.greater_values:
                 self.greater_values[i] = total_list_size
         
@@ -55,26 +57,28 @@ class DataCapture():
 
         return len(self.numbers) - self.numbers[::-1].index(i)
 
-    def _get_next_values(self, i):
+    def _get_next_less_values(self, i):
 
         '''Internal method to get the less and greater value of an iterator i from the collection of numbers'''
 
-        logger.debug('_get_next_values, i: %s' % i)
-        greater = 0
-        less = 0
-        less_already_set = False
-        greater_already_set = False
+        logger.debug('_get_next_less_values, i: %s' % i)
+        less_equal = 0
+        less_strict = 0
+        less_equal_already_set = False
+        less_strict_already_set = False
         for n in self.numbers[::-1]:
-            logger.debug('_get_next_values, n: %s' % n)
-            if i > n and not less_already_set:
-                logger.debug('_get_next_values, found a less value: <%s>' % n)
-                less = n
-                less_already_set = True
-            if i >= n and not greater_already_set:
-                logger.debug('_get_next_values, found a greater value: <%s>' % n)
-                greater = n
-                greater_already_set = True
-        return greater, less
+            logger.debug('_get_next_less_values, n: %s' % n)
+            if i > n and not less_strict_already_set:
+                logger.debug('_get_next_less_values, found a less strict value: <%s>' % n)
+                less_strict = n
+                less_strict_already_set = True
+            if i >= n and not less_equal_already_set:
+                logger.debug('_get_next_less_values, found a less equal value: <%s>' % n)
+                less_equal = n
+                less_equal_already_set = True
+        logger.debug('less equal value of iterator <%s> is <%s>' % (str(i), str(less_equal)))
+        logger.debug('less strict value of iterator <%s> is <%s>' % (str(i),str(less_strict)))
+        return less_equal, less_strict
 
 class Stats():
 
@@ -99,7 +103,7 @@ class Stats():
 
         ''' Method not working'''
 
-        if not(type(num) == int):
+        if not(type(num_1) == int) or not(type(num_2) == int):
             return 0
         if num_1 > num_2:
             return 0
@@ -110,7 +114,7 @@ class Stats():
 
     def between(self,num_1,num_2):
 
-        if not(type(num) == int):
+        if not(type(num_1) == int) or not(type(num_2) == int):
             return 0
         if num_1 > num_2:
             return 0

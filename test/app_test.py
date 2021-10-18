@@ -38,21 +38,30 @@ class TestDataCapture(unittest.TestCase):
 
         self.assertEqual(dc.get_collection(),[])
 
-    def test_get_next_less_item_value(self):
+    def test_get_next_less_values(self):
 
-        self.assertEqual(self.dc_sorted._get_next_less_item_value(5),4)
+        self.assertEqual(self.dc_sorted._get_next_less_values(5),(4,4))
 
-    def test_get_next_less_item_value_empty(self):
+    def test_get_next_less_values_1(self):
 
-        self.assertEqual(self.dc_sorted._get_next_less_item_value(2),0)
+        self.assertEqual(self.dc_sorted._get_next_less_values(4),(4,3))
 
-    def test_get_next_greater_item_value(self):
+    def test_get_next_less_values_2(self):
 
-        self.assertEqual(self.dc_sorted._get_next_greater_item_value(3),3)
+        self.assertEqual(self.dc_sorted._get_next_less_values(2),(0,0))
 
-    def test_get_next_greater_item_value_1(self):
+    def test_get_next_less_values_3(self):
 
-        self.assertEqual(self.dc_sorted._get_next_greater_item_value(7),6)
+        self.assertEqual(self.dc_sorted._get_next_less_values(7),(6,6))
+
+    def test_get_next_less_values_4(self):
+
+        self.assertEqual(self.dc_sorted._get_next_less_values(6),(6,4))
+
+    def test_get_next_less_values_5(self):
+
+        self.assertEqual(self.dc_sorted._get_next_less_values(10),(9,9))
+
 
     def test_build_stats(self):
 
