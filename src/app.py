@@ -99,19 +99,6 @@ class Stats():
         logger.debug('The amount of values less than <%s> is <%s>' % (str(num),str(amount)))
         return amount
 
-    def _between(self, num_1, num_2):
-
-        ''' Method not working'''
-
-        if not(type(num_1) == int) or not(type(num_2) == int):
-            return 0
-        if num_1 > num_2:
-            return 0
-        greater = self.greater(num_1)
-        less = self.less(num_2)
-
-        return greater - less
-
     def between(self,num_1,num_2):
 
         if not(type(num_1) == int) or not(type(num_2) == int):
