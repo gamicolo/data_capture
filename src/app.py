@@ -110,7 +110,7 @@ class Stats():
         logger.debug('The amount of values between the numbers <%s> and <%s> is <%s>' % (str(num_1),str(num_2),str(amount)))
         return amount
 
-    def greater(self,num):
+    def _greater(self,num):
 
         if not(type(num) == int):
             return 0
@@ -118,3 +118,12 @@ class Stats():
         logger.debug('The amount of values greater than <%s> is <%s>' % (str(num),str(amount)))
         return amount
 
+    def greater(self,num):
+
+        if not(type(num) == int):
+            return 0
+        amount = self.greater_values.get(num)
+        if amount == None:
+            amount = 0
+        logger.debug('The amount of values greater than <%s> is <%s>' % (str(num),str(amount)))
+        return amount
