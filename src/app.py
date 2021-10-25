@@ -11,6 +11,7 @@ class DataCapture():
 
         self.numbers = []
         self.less_values = {}
+        self.less_equal_values = {}
         self.greater_values = {}
 
     def add(self,num):
@@ -36,6 +37,11 @@ class DataCapture():
             elif i not in self.less_values:
                 self.less_values[i] = 0
 
+            if i not in self.less_equal_values and next_less_equal:
+                self.less_equal_values[i] = len(self.numbers[0:self._get_max_index(next_less_equal)])
+            elif i not in self.less_equal_values:
+                self.less_equal_values[i] = 0
+
             if i not in self.greater_values and next_less_equal:
                 self.greater_values[i] = total_list_size - len(self.numbers[0:self._get_max_index(next_less_equal)])
             elif i not in self.greater_values:
@@ -44,7 +50,7 @@ class DataCapture():
         logger.debug('self.less_values: %s' % self.less_values)
         logger.debug('self.greater_values: %s' % self.greater_values)
         self.numbers.clear()
-        return Stats(self.numbers, self.less_values, self.greater_values)
+        return Stats(self.numbers, self.less_values, self.less_equal_values, self.greater_values)
 
     def _get_max_value(self,numbers):
         
@@ -83,11 +89,12 @@ class DataCapture():
 
 class Stats():
 
-    def __init__(self,numbers,less_values, greater_values):
+    def __init__(self,numbers,less_values, less_equal_values, greater_values):
 
         self.numbers = numbers
         self.max_less_value = len(numbers)
         self.less_values = less_values
+        self.less_equal_values = less_equal_values
         self.greater_values = greater_values
 
     def less(self,num):
@@ -100,13 +107,30 @@ class Stats():
         logger.debug('The amount of values less than <%s> is <%s>' % (str(num),str(amount)))
         return amount
 
-    def between(self,num_1,num_2):
+    def _between(self,num_1,num_2):
 
         if not(type(num_1) == int) or not(type(num_2) == int):
             return 0
         if num_1 > num_2:
             return 0
         amount = len([i for i in self.numbers if num_1 <= i <= num_2])
+        logger.debug('The amount of values between the numbers <%s> and <%s> is <%s>' % (str(num_1),str(num_2),str(amount)))
+        return amount
+
+    def between(self,num_1,num_2):
+
+        if not(type(num_1) == int) or not(type(num_2) == int):
+            return 0
+        if num_1 > num_2:
+            return 0
+        max_num = self.less_equal_values.get(num_2)
+        if max_num == None:
+            max_num = 0
+        min_num = self.less_values.get(num_1)
+        if min_num == None:
+            min_num = 0
+        
+        amount = max_num - min_num
         logger.debug('The amount of values between the numbers <%s> and <%s> is <%s>' % (str(num_1),str(num_2),str(amount)))
         return amount
 
