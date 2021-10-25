@@ -18,7 +18,7 @@ class DataCapture():
         if type(num) == int:
             self.numbers.append(num)
 
-    def get_collection(self):
+    def get_numbers(self):
 
         return self.numbers
 
@@ -28,16 +28,16 @@ class DataCapture():
 
         self.numbers.sort()
         total_list_size = len(self.numbers)
-        for i in range(self._get_max_item_value(self.numbers)+1):
-            next_less_equal, next_less_strict = self._get_next_less_values(i)
+        for i in range(self._get_max_value(self.numbers)+1):
+            next_less_equal, next_less_strict = self._get_less_values(i)
 
             if i not in self.less_values and next_less_strict:
-                self.less_values[i] = len(self.numbers[0:self._get_max_item_index(next_less_strict)])
+                self.less_values[i] = len(self.numbers[0:self._get_max_index(next_less_strict)])
             elif i not in self.less_values:
                 self.less_values[i] = 0
 
             if i not in self.greater_values and next_less_equal:
-                self.greater_values[i] = total_list_size - len(self.numbers[0:self._get_max_item_index(next_less_equal)])
+                self.greater_values[i] = total_list_size - len(self.numbers[0:self._get_max_index(next_less_equal)])
             elif i not in self.greater_values:
                 self.greater_values[i] = total_list_size
         
@@ -46,34 +46,35 @@ class DataCapture():
         self.numbers.clear()
         return Stats(self.numbers, self.less_values, self.greater_values)
 
-    def _get_max_item_value(self,numbers):
+    def _get_max_value(self,numbers):
         
-        '''Internal method to get the max value of te collection (must be sorted from high to low)'''
+        '''Internal method to get the max value of a sorted (from high to low) list of numbers'''
+
         return numbers[len(numbers)-1]
 
-    def _get_max_item_index(self, i):
+    def _get_max_index(self, i):
         
-        '''Internal method to get the max value of the collection'''
+        '''Internal method to get the max index of a sorted (from high to low) list of numbers'''
 
         return len(self.numbers) - self.numbers[::-1].index(i)
 
-    def _get_next_less_values(self, i):
+    def _get_less_values(self, i):
 
-        '''Internal method to get the less and greater value of an iterator i from the collection of numbers'''
+        '''Internal method to get the less and less equal values of a list'''
 
-        logger.debug('_get_next_less_values, i: %s' % i)
+        logger.debug('_get_less_values, i: %s' % i)
         less_equal = 0
         less_strict = 0
         less_equal_already_set = False
         less_strict_already_set = False
         for n in self.numbers[::-1]:
-            logger.debug('_get_next_less_values, n: %s' % n)
+            logger.debug('_get_less_values, n: %s' % n)
             if i > n and not less_strict_already_set:
-                logger.debug('_get_next_less_values, found a less strict value: <%s>' % n)
+                logger.debug('_get_less_values, found a less strict value: <%s>' % n)
                 less_strict = n
                 less_strict_already_set = True
             if i >= n and not less_equal_already_set:
-                logger.debug('_get_next_less_values, found a less equal value: <%s>' % n)
+                logger.debug('_get_less_values, found a less equal value: <%s>' % n)
                 less_equal = n
                 less_equal_already_set = True
         logger.debug('less equal value of iterator <%s> is <%s>' % (str(i), str(less_equal)))
