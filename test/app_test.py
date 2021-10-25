@@ -29,38 +29,30 @@ class TestDataCapture(unittest.TestCase):
         dc = DataCapture()
         dc.add(1)
 
-        self.assertEqual(dc.get_collection(),[1])
+        self.assertEqual(dc.get_numbers(),[1])
 
     def test_add_string(self):
 
         dc = DataCapture()
         dc.add('a')
 
-        self.assertEqual(dc.get_collection(),[])
+        self.assertEqual(dc.get_numbers(),[])
 
-    def test_get_next_less_values(self):
+    def test_get_same_less_and_less_equal_values(self):
 
-        self.assertEqual(self.dc_sorted._get_next_less_values(5),(4,4))
+        self.assertEqual(self.dc_sorted._get_less_values(5),(4,4))
 
-    def test_get_next_less_values_1(self):
+    def test_get_different_less_and_less_equal_values(self):
 
-        self.assertEqual(self.dc_sorted._get_next_less_values(4),(4,3))
+        self.assertEqual(self.dc_sorted._get_less_values(4),(4,3))
 
-    def test_get_next_less_values_2(self):
+    def test_get_less_values_with_zero_match(self):
 
-        self.assertEqual(self.dc_sorted._get_next_less_values(2),(0,0))
+        self.assertEqual(self.dc_sorted._get_less_values(2),(0,0))
 
-    def test_get_next_less_values_3(self):
+    def test_get_less_values_with_max_match(self):
 
-        self.assertEqual(self.dc_sorted._get_next_less_values(7),(6,6))
-
-    def test_get_next_less_values_4(self):
-
-        self.assertEqual(self.dc_sorted._get_next_less_values(6),(6,4))
-
-    def test_get_next_less_values_5(self):
-
-        self.assertEqual(self.dc_sorted._get_next_less_values(10),(9,9))
+        self.assertEqual(self.dc_sorted._get_less_values(10),(9,9))
 
 
     def test_build_stats(self):
@@ -81,11 +73,15 @@ class TestStats(unittest.TestCase):
 
         self.assertEqual(self.stats.less(4),2)
 
-    def test_less_1(self):
+    def test_less_not_int(self):
+
+        self.assertEqual(self.stats.less('h'),0)
+
+    def test_less_not_in_dict_less(self):
 
         self.assertEqual(self.stats.less(10),5)
 
-    def test_less_2(self):
+    def test_less_with_zero_match(self):
 
         self.assertEqual(self.stats.less(3),0)
 
@@ -93,9 +89,25 @@ class TestStats(unittest.TestCase):
 
         self.assertEqual(self.stats.between(3,6),4)
 
+    def test_between_first_not_int(self):
+
+        self.assertEqual(self.stats.between('h',6),0)
+
+    def test_between_second_not_int(self):
+
+        self.assertEqual(self.stats.between(3,'h'),0)
+
+    def test_between_first_not_greater_than_second(self):
+
+        self.assertEqual(self.stats.between(6,3),0)
+
     def test_greater(self):
 
         self.assertEqual(self.stats.greater(4),2)
+
+    def test_greater_not_in_dict_greater(self):
+
+        self.assertEqual(self.stats.greater(10),0)
 
     def test_greater_not_int(self):
 
