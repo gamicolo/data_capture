@@ -107,16 +107,6 @@ class Stats():
         logger.debug('The amount of values less than <%s> is <%s>' % (str(num),str(amount)))
         return amount
 
-    def _between(self,num_1,num_2):
-
-        if not(type(num_1) == int) or not(type(num_2) == int):
-            return 0
-        if num_1 > num_2:
-            return 0
-        amount = len([i for i in self.numbers if num_1 <= i <= num_2])
-        logger.debug('The amount of values between the numbers <%s> and <%s> is <%s>' % (str(num_1),str(num_2),str(amount)))
-        return amount
-
     def between(self,num_1,num_2):
 
         if not(type(num_1) == int) or not(type(num_2) == int):
@@ -132,14 +122,6 @@ class Stats():
         
         amount = max_num - min_num
         logger.debug('The amount of values between the numbers <%s> and <%s> is <%s>' % (str(num_1),str(num_2),str(amount)))
-        return amount
-
-    def _greater(self,num):
-
-        if not(type(num) == int):
-            return 0
-        amount = len([i for i in self.numbers if i > num])
-        logger.debug('The amount of values greater than <%s> is <%s>' % (str(num),str(amount)))
         return amount
 
     def greater(self,num):
